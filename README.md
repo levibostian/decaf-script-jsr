@@ -63,13 +63,29 @@ This script requires minimal configuration and works automatically with decaf's 
 
 ### Command Line Options
 
-- `--package-path` - (Optional) Path to the directory containing the deno.json file. Defaults to the current directory.
+- `--package-path` - (Optional) Path to the directory containing the jsr.json, deno.jsonc, or deno.json file. Defaults to the current directory.
 
 **Example:**
 
 ```bash
 npx @levibostian/decaf-script-jsr --package-path ./packages/my-package
 ```
+
+### Passing Arguments to jsr CLI
+
+Any arguments you pass to this script (except `--package-path`) will be forwarded directly to the `jsr publish` command. This allows you to customize jsr's behavior as needed.
+
+**Example:**
+
+```bash
+# Use any jsr publish flag
+npx @levibostian/decaf-script-jsr --allow-dirty
+
+# Combine with package path
+npx @levibostian/decaf-script-jsr --package-path ./packages/my-package --allow-slow-types
+```
+
+See the [jsr publish documentation](https://jsr.io/docs/publishing-packages) for all available options.
 
 ### jsr Authentication
 
