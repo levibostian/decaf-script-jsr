@@ -13,7 +13,7 @@ Automates jsr package deployment by using the jsr CLI to publish to the jsr regi
 - **Idempotent**: Checks if version is already deployed to jsr before publishing
 - **Safe Publishing**: Skips publishing if version already exists in jsr registry
 - **Test Mode**: Supports `--dry-run` flag for testing without actual deployment
-- **Path Configuration**: Optionally specify deno.json location via `--package-path`
+- **Path Configuration**: Optionally specify config file (jsr.json, deno.jsonc, or deno.json) location via `--package-path`
 - **Exit Codes**: Returns 0 on success (including when already deployed), 1 on failure
 
 ## Architecture
@@ -24,14 +24,15 @@ Automates jsr package deployment by using the jsr CLI to publish to the jsr regi
    - Uses the decaf SDK for input handling via `DATA_FILE_PATH` environment variable
    - Uses `@david/dax` for shell command execution (jsr commands)
    - Uses `@std/cli` for command-line argument parsing
-   - Validates deno.json exists, updates version, checks deployment status, publishes to jsr
+   - Detects config file type by checking for jsr.json, deno.jsonc, or deno.json (in that priority order) using inline logic
+   - Validates config file exists, updates version, checks deployment status, publishes to jsr
    - Provides human-readable console output for each deployment step
 
 2. **`script.test.ts`** - Functional test suite (script.test.ts:1)
    - Runs script as subprocess to properly handle `Deno.exit()` calls
    - Tests version updates, already-deployed checks, test mode, error cases
-   - Uses temporary directories with mock deno.json files
-   - Verifies deno.json updates and jsr publish behavior
+   - Uses temporary directories with mock config files (jsr.json, deno.jsonc, or deno.json)
+   - Verifies config file updates and jsr publish behavior
 
 3. **`script.logs.test.ts`** - Snapshot test suite (script.logs.test.ts:1)
    - Validates console output formatting and user feedback
@@ -82,9 +83,9 @@ Automates jsr package deployment by using the jsr CLI to publish to the jsr regi
 ### External Tools (called via shell)
 
 - **`jsr`** - jsr Package Manager CLI
-  - `jsr version` - Updates deno.json version field
+  - `jsr version` - Updates config file (jsr.json, deno.jsonc, or deno.json) version field
   - `jsr publish` - Publishes package to jsr registry
-  - `jsr pkg get name` - Extracts package name from deno.json
+  - `jsr pkg get name` - Extracts package name from config file
 
 - **`is-it-deployed`** - Deployment verification tool
   - `npx is-it-deployed --package-manager jsr --package-name X --package-version Y`
@@ -112,7 +113,7 @@ Automates jsr package deployment by using the jsr CLI to publish to the jsr regi
 decaf-script-jsr [--package-path <path>]
 ```
 
-- `--package-path` (optional): Path to directory containing deno.json (defaults to current directory)
+- `--package-path` (optional): Path to directory containing jsr.json, deno.jsonc, or deno.json (defaults to current directory)
 
 ### Environment Variables
 
@@ -127,7 +128,7 @@ decaf-script-jsr [--package-path <path>]
 **This script does NOT write output to the DATA_FILE_PATH file.** Instead, it performs actions (version update and jsr publish) and uses exit codes to signal success or failure:
 
 - **Exit code 0**: Success (deployment completed OR already deployed - idempotent)
-- **Exit code 1**: Failure (missing deno.json, version update failed, etc.)
+- **Exit code 1**: Failure (missing config file, version update failed, etc.)
 
 ## Development Workflow
 
@@ -161,6 +162,8 @@ cat > test-package/deno.json << 'EOF'
 }
 EOF
 
+# Or use jsr.json or deno.jsonc instead
+
 # Create decaf input file
 export DATA_FILE_PATH="./test-input.json"
 cat > test-input.json << 'EOF'
@@ -174,7 +177,7 @@ EOF
 deno run --allow-all script.ts --package-path ./test-package
 
 # Verify version was updated
-cat test-package/deno.json  # Should show version 1.1.0
+cat test-package/deno.json  # Should show version 1.1.0 (or check jsr.json/deno.jsonc if using those)
 
 # Clean up
 rm -rf test-package test-input.json
@@ -210,10 +213,10 @@ This script supports 4 distribution methods (all must be maintained):
 ### Test Structure
 
 **script.test.ts** - Functional tests
-- Each test creates a temporary directory with a mock deno.json
+- Each test creates a temporary directory with a mock config file (jsr.json, deno.jsonc, or deno.json)
 - Creates a temporary decaf input file
 - Runs script as subprocess with `DATA_FILE_PATH` and `--package-path` arguments
-- Verifies deno.json was updated correctly
+- Verifies config file was updated correctly
 - Uses `DECAF_SCRIPT_JSR_DID_ALREADY_DEPLOY` env var to mock deployment checks
 - Cleans up temp files/directories
 
@@ -226,12 +229,13 @@ This script supports 4 distribution methods (all must be maintained):
 ### Test Coverage
 
 **script.test.ts**:
-- ✅ Version update in deno.json
-- ✅ Error when deno.json not found
+- ✅ Version update in config file
+- ✅ Error when no config file (jsr.json, deno.jsonc, or deno.json) found
 - ✅ Skips publishing when version already deployed
 - ✅ Uses `--dry-run` flag in test mode
 - ✅ Uses no flags in production mode
 - ✅ Custom package path handling
+- ✅ Works with jsr.json, deno.jsonc, and deno.json
 
 **script.logs.test.ts**:
 - ✅ Console output formatting
@@ -240,7 +244,7 @@ This script supports 4 distribution methods (all must be maintained):
 - ✅ Error messages
 
 ### Why Subprocess Approach?
-The script calls `Deno.exit(0)` in certain conditions (already deployed, missing deno.json). Direct imports would crash the test runner, so we run the script as a subprocess instead.
+The script calls `Deno.exit(0)` in certain conditions (already deployed, missing config file). Direct imports would crash the test runner, so we run the script as a subprocess instead.
 
 ## Common Tasks
 
@@ -312,16 +316,16 @@ To modify how the script checks if a version is deployed:
 - Every deployment step produces clear console output
 - Format: Action description followed by ✓ on success
 - Examples:
-  - `Updating deno.json version to 2.3.4...`
-  - `✓ Version updated in the deno.json file successfully`
+  - `Updating jsr.json version to 2.3.4...` (or deno.jsonc/deno.json depending on which file is found)
+  - `✓ Version updated in the jsr.json file successfully`
   - `Checking if version 2.3.4 of @my-org/package is already deployed...`
   - `✓ Version 2.3.4 has not yet been deployed to jsr. Proceeding to publish...`
 - This is a key feature - users rely on this feedback to understand what's happening
 
 ### Error Handling
-- Script exits with code 1 on errors (missing deno.json, version update failure)
+- Script exits with code 1 on errors (missing config file, version update failure)
 - Script exits with code 0 on success OR when already deployed (idempotent)
-- Version update is verified by reading deno.json after jsr version command
+- Version update is verified by reading the config file after jsr version command
 - jsr authentication errors are passed through from jsr CLI
 
 ### Idempotency
@@ -344,7 +348,7 @@ The script is designed to be safe to run multiple times:
 
 2. **jsr authentication required** - The script does not handle jsr authentication; it relies on jsr CLI's existing auth configuration
 
-3. **Version update uses jsr CLI** - The script uses `jsr version` to update deno.json, not direct JSON manipulation; this ensures jsr's validation rules are followed
+3. **Version update uses jsr CLI** - The script uses `jsr version` to update the config file (jsr.json, deno.jsonc, or deno.json), not direct JSON manipulation; this ensures jsr's validation rules are followed
 
 4. **Binary compilation** - Requires all permissions (`--allow-env --allow-net --allow-run --allow-read --allow-write`)
 
@@ -354,9 +358,9 @@ The script is designed to be safe to run multiple times:
 
 7. **is-it-deployed dependency** - The script uses `npx is-it-deployed` to check deployment status; this tool must be available in the environment
 
-8. **deno.json must exist** - The script validates deno.json exists before proceeding; it will not create one if missing
+8. **Config file must exist** - The script validates that one of jsr.json, deno.jsonc, or deno.json exists before proceeding; it will not create one if missing. The script checks for files in this priority order: jsr.json → deno.jsonc → deno.json, and uses the first one found
 
-9. **Version in deno.json is modified** - The script modifies deno.json during execution; ensure your CI/CD doesn't fail on uncommitted changes (or commit the version bump)
+9. **Version in config file is modified** - The script modifies the config file during execution; ensure your CI/CD doesn't fail on uncommitted changes (or commit the version bump)
 
 ## Related Documentation
 
