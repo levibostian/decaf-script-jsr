@@ -1,0 +1,37 @@
+export const snapshot = {};
+
+snapshot[`console logs: successful deployment flow 1`] = `
+"Time to deploy to jsr!
+
+Checking if version 2.0.0 of @test/test-package is already deployed...
+✓ Version 2.0.0 has not yet been deployed to jsr. Proceeding to publish...
+Publishing to jsr...
+✓ Successfully published @test/test-package@2.0.0 to jsr!
+Note: You were in test mode, so no real publishing occurred. 😉
+"
+`;
+
+snapshot[`console logs: already deployed - skip publishing 1`] = `
+"Time to deploy to jsr!
+
+Checking if version 1.5.0 of @test/test-package is already deployed...
+✓ Version 1.5.0 of @test/test-package is already deployed to jsr
+Therefore, I'm going to skip publishing to jsr right now. Deploying to jsr complete!
+"
+`;
+
+snapshot[`console logs: no config file error 1`] = `
+"No jsr.json, deno.jsonc, deno.json file found at /private[TEMP_DIR]. Exiting.
+"
+`;
+
+snapshot[`console logs: test mode with dry-run 1`] = `
+"Time to deploy to jsr!
+
+Checking if version 3.0.0 of @test/test-package is already deployed...
+✓ Version 3.0.0 has not yet been deployed to jsr. Proceeding to publish...
+Publishing to jsr...
+✓ Successfully published @test/test-package@3.0.0 to jsr!
+Note: You were in test mode, so no real publishing occurred. 😉
+"
+`;
