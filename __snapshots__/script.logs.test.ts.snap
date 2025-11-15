@@ -21,7 +21,7 @@ Therefore, I'm going to skip publishing to jsr right now. Deploying to jsr compl
 `;
 
 snapshot[`console logs: no config file error 1`] = `
-"No jsr.json, deno.jsonc, deno.json file found at /private[TEMP_DIR]. Exiting.
+"No jsr.json, deno.jsonc, deno.json file found at [TEMP_DIR]. Exiting.
 "
 `;
 
