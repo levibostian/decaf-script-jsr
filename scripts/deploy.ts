@@ -37,13 +37,13 @@ await $`deno ${[
 // Publish the deno module to jsr
 // ---------------------------------------------------------------------------------
 
-await $`deno run --quiet --allow-all script.ts`.printCommand()
+await $`deno run --quiet --allow-all script.ts --allow-dirty`.printCommand()
 
 // ---------------------------------------------------------------------------------
 // Publish the package to npm
 // ---------------------------------------------------------------------------------
 
-await $`deno run --allow-all --quiet jsr:@levibostian/decaf-script-github-npm  --package-path ./node`.printCommand();
+await $`deno run --allow-all --quiet jsr:@levibostian/decaf-script-npm  --package-path ./node`.printCommand();
 
 // ---------------------------------------------------------------------------------
 // Create a GitHub release
