@@ -110,7 +110,10 @@ Deno.test("console logs: no config file error", async (t) => {
 
   const dataFile = Deno.makeTempFileSync();
   Deno.writeTextFileSync(dataFile, JSON.stringify(inputData));
-  const emptyDir = Deno.makeTempDirSync();
+
+  // create a temp directory and get the absolute path to it. 
+  // on some OSes, the temp dir is missing some parts of the path (like /private on macOS)
+  const emptyDir = Deno.realPathSync(Deno.makeTempDirSync());
 
   const env: Record<string, string> = {
     DATA_FILE_PATH: dataFile,
