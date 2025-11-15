@@ -1,0 +1,22 @@
+{
+  "name": "@levibostian/decaf-script-jsr",
+  "version": "0.0.0",
+  "description": "A lightweight jsr wrapper for decaf-script-jsr binary",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/levibostian/decaf-script-jsr.git"
+  },
+  "main": "script.js",
+  "bin": {
+    "decaf-script-jsr": "./script.js"
+  },
+  "keywords": [
+    "decaf"
+  ],
+  "author": "Levi Bostian",
+  "license": "MIT"
+}
