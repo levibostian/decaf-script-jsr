@@ -1,6 +1,5 @@
 {
   "name": "@levibostian/decaf-script-jsr",
-  "version": "0.0.0",
   "exports": "./script.ts",
   "publish": {
     "include": [
