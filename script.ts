@@ -3,6 +3,7 @@
 import { getDeployStepInput } from "@levibostian/decaf-sdk";
 import $ from "@david/dax";
 import { parseArgs } from "@std/cli/parse-args";
+import { parse as jsoncParse } from "@std/jsonc";
 
 // Parse the command line arguments to configure the script
 const args = parseArgs(Deno.args, {
@@ -55,10 +56,18 @@ const input = getDeployStepInput();
 console.log("Time to deploy to jsr!");
 console.log("");
 
-// Update the config file version to the new version
-const nameOfPackage: string = JSON.parse(Deno.readTextFileSync(
+const configFileObj = jsoncParse(Deno.readTextFileSync(
   `${absolutePathToPackage}/${configFileName}`,
-)).name;
+));
+if (typeof configFileObj !== "object" || configFileObj === null || Array.isArray(configFileObj)) {
+  console.log(
+    `The config file ${configFileName} is not a valid json object.`,
+  );
+  Deno.exit(1);
+}
+
+// Update the config file version to the new version
+const nameOfPackage: string = configFileObj["name"] as string
 
 console.log(
   `Checking if version ${input.nextVersionName} of ${nameOfPackage} is already deployed...`,

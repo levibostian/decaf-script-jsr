@@ -15,6 +15,7 @@
   "imports": {
     "@levibostian/decaf-sdk": "jsr:@levibostian/decaf-sdk@^0.2.1",
     "@david/dax": "jsr:@david/dax@^0.43.2",
-    "@std/cli": "jsr:@std/cli@^1.0.23"
+    "@std/cli": "jsr:@std/cli@^1.0.23",
+    "@std/jsonc": "jsr:@std/jsonc@^1.0.2"
   }
 }

@@ -34,16 +34,18 @@ function setupTestEnv(options: TestEnvOptions) {
   const tempDir = Deno.makeTempDirSync();
 
   // Create the config file (jsr.json, deno.jsonc, or deno.json)
-  const packageJson = {
-    name: packageName,
-    version: initialVersion,
-    description: "Test package",
-    license: "MIT",
-    exports: "./index.ts",
-  };
+  // Always written with a comment inside to exercise the JSONC parser.
+  const configFileContent = `{
+  // this is a comment inside the config file
+  "name": "${packageName}",
+  "version": "${initialVersion}",
+  "description": "Test package",
+  "license": "MIT",
+  "exports": "./index.ts"
+}`
   Deno.writeTextFileSync(
     join(tempDir, configFileType),
-    JSON.stringify(packageJson, null, 2),
+    configFileContent,
   );
 
   // Create a fake index.ts file
