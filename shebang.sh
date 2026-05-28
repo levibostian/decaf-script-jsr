@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -eu
 
 # Script that runs via decaf's shebang feature.
 
