@@ -8,7 +8,7 @@ This is a decaf deploy step script that handles jsr package deployment. When dec
 
 1. **Publish a new version of the package** to match the release version determined by decaf
 2. **Check if the version is already deployed** to jsr (to avoid the script throwing an error because of jsr not allowing you to publish the same version multiple times)
-3. **Publish the package to jsr** 
+3. **Publish the package to jsr**
 
 # Getting Started
 
@@ -19,8 +19,9 @@ Run using decaf's `shebang` command in your deployment workflow.
 ```yaml
 - uses: levibostian/decaf
   with:
-    deploy: decaf shebang git@github.com:levibostian/decaf-script-jsr.git/shebang.sh@<version-here>
-    # Other decaf arguments...
+    deploy: |
+      decaf shebang https://github.com/levibostian/decaf-script-jsr.git/shebang.sh@<version-here>
+      # Other decaf arguments...
 ```
 
 Replace `<version-here>` with a [release](https://github.com/levibostian/decaf-script-jsr/releases). Latest: ![GitHub Release](https://img.shields.io/github/v/release/levibostian/decaf-script-jsr)
@@ -29,7 +30,7 @@ Replace `<version-here>` with a [release](https://github.com/levibostian/decaf-s
 
 ```bash
 decaf \
-  --deploy "decaf shebang git@github.com:levibostian/decaf-script-jsr.git/shebang.sh@<version-here>"
+  --deploy "decaf shebang https://github.com/levibostian/decaf-script-jsr.git/shebang.sh@<version-here>"
 ```
 
 # Configuration
@@ -43,7 +44,7 @@ This script requires minimal configuration and works automatically with decaf's 
 **Example:**
 
 ```bash
-decaf shebang git@github.com:levibostian/decaf-script-jsr.git/shebang.sh@<version-here> --package-path ./packages/my-package
+decaf shebang https://github.com/levibostian/decaf-script-jsr.git/shebang.sh@<version-here> --package-path ./packages/my-package
 ```
 
 ### Passing Arguments to jsr CLI
@@ -54,10 +55,10 @@ Any arguments you pass to this script (except `--package-path`) will be forwarde
 
 ```bash
 # Use any jsr publish flag
-decaf shebang git@github.com:levibostian/decaf-script-jsr.git/shebang.sh@<version-here> --allow-dirty
+decaf shebang https://github.com/levibostian/decaf-script-jsr.git/shebang.sh@<version-here> --allow-dirty
 
 # Combine with package path
-decaf shebang git@github.com:levibostian/decaf-script-jsr.git/shebang.sh@<version-here> --package-path ./packages/my-package --allow-slow-types
+decaf shebang https://github.com/levibostian/decaf-script-jsr.git/shebang.sh@<version-here> --package-path ./packages/my-package --allow-slow-types
 ```
 
 See the [jsr publish documentation](https://jsr.io/docs/publishing-packages) for all available options.
