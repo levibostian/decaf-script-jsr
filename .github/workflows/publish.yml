@@ -11,14 +11,9 @@ jobs:
       contents: write # If your deploy script that you write needs to push a git commit, git tag, or create a GitHub Release.
       pull-requests: write # If you enable pull request comments (they are enabled by default).
     steps:
-      - uses: actions/checkout@v5
-
-      - name: Set up Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v2.x
+      - uses: actions/checkout@v6
       
-      - uses: levibostian/decaf@0.16.0
+      - uses: levibostian/decaf@0.17.2
         env:
           # required to use 'gh' CLI in my step scripts. 
           GH_TOKEN: ${{ github.token }}      
