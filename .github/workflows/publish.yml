@@ -24,21 +24,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}      
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          get_latest_release_current_branch: decaf shebang git@github.com:levibostian/decaf-script-github-releases.git/shebang.sh@v1.2.0 get
-          get_next_release_version: decaf shebang git@github.com:levibostian/decaf-script-conventional-commits.git/shebang.sh@0.3.0
-          deploy: |
-            deno compile --output decaf-script-jsr-x64-linux --target x86_64-unknown-linux-gnu script.ts
-            deno compile --output decaf-script-jsr-arm64-linux --target aarch64-unknown-linux-gnu script.ts
-            deno compile --output decaf-script-jsr-x64-macos --target x86_64-apple-darwin script.ts
-            deno compile --output decaf-script-jsr-arm64-macos --target aarch64-apple-darwin script.ts
-            cp install.template install.sh
-            chmod +x install.sh
-            sed -i "s/PUT_VERSION_HERE/{{nextVersionName}}/" install.sh
-            cat install.sh | grep VERSION
-            decaf shebang git@github.com:levibostian/decaf-script-github-releases.git/shebang.sh@v1.2.0 set-github-release-assets \
-              decaf-script-jsr-x64-linux \
-              decaf-script-jsr-arm64-linux \
-              decaf-script-jsr-x64-macos \
-              decaf-script-jsr-arm64-macos \
-              install.sh
-            decaf shebang git@github.com:levibostian/decaf-script-github-releases.git/shebang.sh@v1.2.0 set
+          get_latest_release_current_branch: decaf shebang https://github.com/levibostian/decaf-script-github-releases.git/shebang.sh@v1.3.0 get
+          get_next_release_version: decaf shebang https://github.com/levibostian/decaf-script-conventional-commits.git/shebang.sh@0.3.0
+          deploy: decaf shebang https://github.com/levibostian/decaf-script-github-releases.git/shebang.sh@v1.3.0 set
