@@ -2,7 +2,7 @@
   "tasks": {
     "test": "deno test --allow-all --junit-path reports/junit.xml --coverage=reports/coverage/",
     "lint": "deno lint --fix",
-    "run": "deno run --allow-all script.ts"
+    "run": "deno run --quiet --allow-env --allow-net --allow-run --allow-read --allow-write script.ts"
   },
   "imports": {
     "@levibostian/decaf-sdk": "jsr:@levibostian/decaf-sdk@^0.2.1",
