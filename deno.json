@@ -1,19 +1,11 @@
 {
-  "name": "@levibostian/decaf-script-jsr",
-  "exports": "./script.ts",
-  "publish": {
-    "include": [
-      "README.md",
-      "LICENSE",
-      "script.ts"
-    ]
-  },
   "tasks": {
     "test": "deno test --allow-all --junit-path reports/junit.xml --coverage=reports/coverage/",
-    "lint": "deno lint --fix"
+    "lint": "deno lint --fix",
+    "run": "deno run --quiet --allow-env --allow-net --allow-run --allow-read --allow-write script.ts"
   },
   "imports": {
-    "@levibostian/decaf-sdk": "jsr:@levibostian/decaf-sdk@^0.2.1",
+    "@levibostian/decaf-sdk": "jsr:@levibostian/decaf-sdk@^0.7.0",
     "@david/dax": "jsr:@david/dax@^0.43.2",
     "@std/cli": "jsr:@std/cli@^1.0.23",
     "@std/jsonc": "jsr:@std/jsonc@^1.0.2"
