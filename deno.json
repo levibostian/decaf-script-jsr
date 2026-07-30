@@ -5,7 +5,11 @@
     "run": "deno run --quiet --allow-env --allow-net --allow-run --allow-read --allow-write script.ts"
   },
   "imports": {
-    "@levibostian/decaf-sdk": "jsr:@levibostian/decaf-sdk@^0.7.0",
+    "@levibostian/decaf-sdk": "https://raw.githubusercontent.com/levibostian/decaf-sdk-deno/put-root-dir-env-var-in-input/main.ts",
+    "@levibostian/decaf-sdk/testing": "https://raw.githubusercontent.com/levibostian/decaf-sdk-deno/put-root-dir-env-var-in-input/testing/mod.ts",
+    "@cross/env": "jsr:@cross/env@^1.0.3",
+    "@cross/fs": "jsr:@cross/fs@^0.1.13",
+    "@cross/utils": "jsr:@cross/utils@^0.16.0",
     "@david/dax": "jsr:@david/dax@^0.43.2",
     "@std/cli": "jsr:@std/cli@^1.0.23",
     "@std/jsonc": "jsr:@std/jsonc@^1.0.2"

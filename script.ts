@@ -1,9 +1,5 @@
 #!/usr/bin/env -S deno run --quiet --allow-all --no-lock
 
-// Change to the working directory specified by the decaf environment
-const decafRootWd = Deno.env.get("DECAF_ROOT_WORKING_DIRECTORY");
-if (decafRootWd) Deno.chdir(decafRootWd);
-
 import { getDeployStepInput } from "@levibostian/decaf-sdk";
 import $ from "@david/dax";
 import { parseArgs } from "@std/cli/parse-args";
@@ -55,6 +51,7 @@ if (!configFileName) {
 }
 
 const input = getDeployStepInput();
+Deno.chdir(input.gitRootDirectory);
 
 // log an intro message
 console.log("Time to deploy to jsr!");
